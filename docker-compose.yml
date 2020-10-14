@@ -1,22 +1,40 @@
 version: "3"
 
 services:
-  rabbitmq:
-    image: rabbitmq:3-management
-    environment:
-      RABBITMQ_ERLANG_COOKIE: 'SWQOKODSQALRPCLNMEQG'
-      RABBITMQ_DEFAULT_USER: "guest"
-      RABBITMQ_DEFAULT_PASS: "guest"
-      RABBITMQ_DEFAULT_VHOST: "/"
+  sender:
+    build:
+      context: .
+      dockerfile: Dockerfile.sender
     ports:
-      - "8080:15672"
-      - "5672:5672"
-    restart: always
-    tty: true
-
-  app:
-    build: .
+      - "3333:3333"
+    volumes:
+      - .:/usr/rabbitmqapp
     links:
       - rabbitmq
     depends_on:
       - rabbitmq
+
+  consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile.consumer
+    restart: always
+    volumes:
+      - .:/usr/rabbitmqapp
+    links:
+      - sender
+    depends_on:
+      - sender      
+
+  rabbitmq:
+    build:
+      context: ./rabbitmq
+      dockerfile: Dockerfile
+    environment:
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "admin"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    volumes:
+      - .:/usr/rabbitmqapp/queues

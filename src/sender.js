@@ -2,8 +2,8 @@ const express = require('express');
 const cors = require('cors'); 
 const app = express();
 
-const Rabbit = require('./Rabbit');
-const rabbitmq = new Rabbit();
+const RabbitMessenger = require('./services/RabbitMessenger');
+const rabbitmq = new RabbitMessenger();
 
 app.use(express.json());
 app.use(cors());

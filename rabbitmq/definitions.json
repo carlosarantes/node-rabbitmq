@@ -1,0 +1,55 @@
+{
+    "users": [
+        {
+          "name": "guest",
+          "password" : "guest",
+          "tags": "administrator"
+        }
+    ],
+    "vhosts": [
+    {
+        "name": "/"
+    }
+    ],
+    "permissions": [
+    {
+        "user": "guest",
+        "vhost": "/",
+        "configure": ".*",
+        "write": ".*",
+        "read": ".*"
+    }
+    ],
+    "parameters": [],
+    "policies": [],
+    "exchanges": [
+      {
+        "name": "messages",
+        "vhost": "/",
+        "type": "fanout",
+        "durable": true,
+        "auto_delete": false,
+        "internal": false,
+        "arguments": {}
+      }
+    ],
+    "queues": [
+      {
+        "name": "messages",
+        "vhost": "/",
+        "durable": true,
+        "auto_delete": false,
+        "arguments": {}
+      }
+    ],
+    "bindings": [
+      {
+        "source": "messages",
+        "vhost": "/",
+        "destination": "messages",
+        "destination_type": "queue",
+        "routing_key": "*",
+        "arguments": {}
+      }
+    ]
+  }

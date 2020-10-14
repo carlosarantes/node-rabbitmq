@@ -1,12 +1,12 @@
 const amqp = require('amqplib');
 
-module.exports = class Rabbit {
+module.exports = class RabbitMessenger {
 
     constructor()
     {}
 
     async openConnection() {
-        return await amqp.connect('amqp://localhost');
+        return await amqp.connect('amqp://rabbitmq');
     }
 
     async createChannel() {
