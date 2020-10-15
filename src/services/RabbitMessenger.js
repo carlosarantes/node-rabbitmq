@@ -3,10 +3,16 @@ const amqp = require('amqplib');
 module.exports = class RabbitMessenger {
 
     constructor()
-    {}
+    {
+        this.connection = null;
+    }
 
-    async openConnection() {
-        return await amqp.connect('amqp://rabbitmq');
+    async openConnection(retry_on_error = true, tries = 1, max_tries = 3) {
+        if (!this.connection) {
+            this.connection = await amqp.connect('amqp://rabbitmq');
+        }
+
+        return this.connection;
     }
 
     async createChannel() {
@@ -22,6 +28,7 @@ module.exports = class RabbitMessenger {
     }
 
     async consume(q = 'messages') {
+        await new Promise(resolve => setTimeout(resolve, 10000));
         const ch = await this.createChannel();
         return ch.assertQueue(q).then(function(ok) {
             return ch.consume(q, function(msg) {
